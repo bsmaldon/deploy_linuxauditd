@@ -46,6 +46,10 @@ class deploy_linuxauditd (
   String $owner = 'splunk',
   String $group = 'splunk'
 ){
+
+  contain ::deploy_linuxauditd::posix_identities
+  contain ::deploy_linuxauditd::inputs
+
   file { '/opt/splunk/etc/apps/TA_linux-auditd/':
     ensure  => 'directory',
     source  => 'puppet:///modules/deploy_linuxauditd/TA_linux-auditd',
@@ -55,7 +59,7 @@ class deploy_linuxauditd (
     replace => 'no',
     require => Package['splunk'],
   }
-  file { '/opt/splunk/etc/apps/linux-auditd/':
+  -> file { '/opt/splunk/etc/apps/linux-auditd/':
     ensure  => 'directory',
     source  => 'puppet:///modules/deploy_linuxauditd/linux-auditd',
     owner   => $owner,
@@ -65,6 +69,7 @@ class deploy_linuxauditd (
     require => Package['splunk'],
   }
 
-  include deploy_linuxauditd::posix_identities
+  -> Class['::deploy_linuxauditd::inputs']
+  -> Class['::deploy_linuxauditd::posix_identities']
 
 }

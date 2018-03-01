@@ -1,0 +1,5 @@
+# Example inputs.conf stanza for ingesting Linux Auditd events
+[monitor:///var/log/audit/audit.log]
+disabled = <%= @disabled %>
+index = <%= @index %>
+sourcetype = linux:audit
